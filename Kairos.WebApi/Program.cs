@@ -1,3 +1,4 @@
+using Kairos.WebApi.ApiOperations;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -10,14 +11,16 @@ try
 
     builder.Services.AddOpenApi();
 
-    builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfiguration.ReadFrom.Configuration(builder.Configuration));
+    builder.Services.AddSerilog((_, loggerConfiguration) => loggerConfiguration.ReadFrom.Configuration(builder.Configuration));
 
     builder.Services.AddSwaggerGen();
     
     builder.Services.AddHealthChecks();
+    
+    builder.Services.AddScoped<HelloWorldApi>();
         
     var app = builder.Build();
-
+    
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
@@ -25,7 +28,7 @@ try
         
         app.MapOpenApi();
     }
-
+    
     app.UseHttpsRedirection();
     
     app.UseDefaultFiles();
@@ -34,6 +37,8 @@ try
 
     app.MapHealthChecks("health");
     
+    app.MapHelloWorldApi();
+  
     app.Run();
 }
 catch (Exception ex)
