@@ -13,6 +13,8 @@ try
     builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfiguration.ReadFrom.Configuration(builder.Configuration));
 
     builder.Services.AddSwaggerGen();
+    
+    builder.Services.AddHealthChecks();
         
     var app = builder.Build();
 
@@ -30,6 +32,8 @@ try
     
     app.UseStaticFiles();
 
+    app.MapHealthChecks("health");
+    
     app.Run();
 }
 catch (Exception ex)
